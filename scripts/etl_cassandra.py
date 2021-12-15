@@ -49,7 +49,7 @@ def process_data(filepath):
 
     # check the number of rows in your csv file
     with open('../data/event_datafile_new.csv', 'r', encoding = 'utf8') as f:
-        print('{} rows processed.'.format(sum(1 for line in f)))
+        print('\n' + '{} rows processed.'.format(sum(1 for line in f)))
 
 def sample_queries(session, query):
     try:
@@ -64,9 +64,7 @@ def main():
     """
     Description: This function is responsible for run the ETL pipeline process.
     - Establishes connection with the sparkify database and gets cursor to it.
-    - Read the song files in its directory, and then execute the ingest process
-    for each file and save it to the database
-    - Read the log files in its directory, and then execute the ingest process
+    - Read the event files in its directory, and then execute the ingest process
     for each file and save it to the database
     - Finally, closes the connection.
 
@@ -90,6 +88,7 @@ def main():
     session, cluster = connect_database()
 
     for query in queries:
+        print ('\n' + queries_title[queries.index(query)])
         sample_queries(session,query)
 
     # Close conection and cluster

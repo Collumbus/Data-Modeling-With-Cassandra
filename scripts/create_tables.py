@@ -1,5 +1,3 @@
-import cassandra
-import os
 import csv
 from sql_queries import create_table_queries, drop_table_queries, artist_songs_table_insert, user_songs_table_insert, listened_songs_table_insert
 
@@ -73,8 +71,7 @@ def create_tables(session):
 
 def insert_data(filepath):
     """
-    Description:
-    -
+    Description: Insert data into modeled tables
 
     Arguments:
         None.
@@ -90,10 +87,10 @@ def insert_data(filepath):
         csvreader = csv.reader(f)
         next(csvreader) # skip header
         for line in csvreader:
-            session.execute(artist_songs_table_insert, (line[0], line[9], float(line[5]), int(line[8]), int(line[3])))
-            session.execute(user_songs_table_insert, (line[0], line[9], line[1], line[4], int(line[10]), int(line[8]), int(line[3])))
-            session.execute(listened_songs_table_insert, (int(line[10]), line[1], line[4], line[9]))
-        print('All data has been inserted in the tables.')
+            session.execute(artist_songs_table_insert, (int(line[8]), int(line[3]), line[0], line[9], float(line[5])))
+            session.execute(user_songs_table_insert, (int(line[10]), int(line[8]), int(line[3]), line[0], line[9], line[1], line[4]))
+            session.execute(listened_songs_table_insert, (line[9], int(line[10]), line[1], line[4]))
+        print('\n' + 'All data has been inserted in the tables.')
 
     session.shutdown()
     cluster.shutdown()
@@ -110,7 +107,7 @@ def prepare_db():
 
     - Creates all tables needed.
 
-    - Finally, closes the connection.
+    - Finally, closes the connection and cluster.
 
     Arguments:
         None.
